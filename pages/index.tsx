@@ -22,13 +22,12 @@ export interface IArticle {
   title: string,
   date: string,
   author: string,
+  url: string,
+  website: string,
 }
 
 
 export default function Home(props: DashboardProps) {
-  console.log("props -------------------")
-  console.log(props)
-
   return (
     <TableContainer>
       <Dashboard articles={props.articles} />
@@ -40,19 +39,7 @@ export default function Home(props: DashboardProps) {
 // It won't be called on client-side, so you can even do
 // direct database queries.
 export async function getServerSideProps() {
-  // trigger a article database reload, and wait for it to finish
-  // const response = await fetch("http://localhost:8080/fetch/korben")
-  // const data = await response.json()
-
-  // // Create a new Article object from the data
-  // const article: IArticle = {
-  //   title: data.title,
-  //   date: data.date,
-  //   author: data.author
-  // }
-
-
-  // Fetch the last article directory from the database
+  // Fetch the last article directly from the database
   let articles = await getArticles()
 
   // if articles is empty, create a empty array
@@ -65,14 +52,36 @@ export async function getServerSideProps() {
       return {
         title: article.title,
         date: article.date,
-        author: article.author
+        author: article.author,
+        url: article.url,
+        website: article.website
       }
     })
   }
 
+  // Create a list of list of articles. One list for every website
+  let articlesByWebsite: IArticle[][] = []
+  for (let i = 0; i < iarticles.length; i++) {
+    let article = iarticles[i]
+    let website = article.website
+    let index = articlesByWebsite.findIndex((a) => a[0].website === website)
+    if (index === -1) {
+      articlesByWebsite.push([article])
+    } else {
+      articlesByWebsite[index].push(article)
+    }
+  }
+
+  // for every sublist, sort the articles by date
+  articlesByWebsite = articlesByWebsite.map((articles) => {
+    return articles.sort((a, b) => {
+      return new Date(b.date).getTime() - new Date(a.date).getTime()
+    })
+  })
+
   return {
     props: {
-      articles: iarticles,
+      articles: articlesByWebsite,
     },
   }
 }
