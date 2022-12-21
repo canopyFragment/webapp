@@ -7,6 +7,8 @@ export interface IArticle {
     title: string;
     author: string;
     date: string;
+    url: string;
+    website: string;
 }
 
 
@@ -21,6 +23,8 @@ export const createArticle = async (user: IArticle) => {
       if (_exist(user.title)) newArticle.title = user.title;
       if (_exist(user.author)) newArticle.author = user.author;
       if (_exist(user.date)) newArticle.date = user.date;
+      if (_exist(user.url)) newArticle.url = user.url;
+      if (_exist(user.website)) newArticle.website = user.website;
 
       return DataSource.manager.save(newArticle);
     })
@@ -40,6 +44,8 @@ export const updateArticle = async (article: IArticle) => {
     if (_exist(article.title)) _article.title = article.title;
     if (_exist(article.author)) _article.author = article.author;
     if (_exist(article.date)) _article.date = article.date;
+    if (_exist(article.url)) _article.url = article.url;
+    if (_exist(article.website)) _article.website = article.website;
 
     return dataSource.manager.save(_article);
 }

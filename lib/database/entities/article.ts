@@ -15,4 +15,10 @@ export class Article extends BaseEntity{
 
     @Column()
     date: string;
+
+    @Column()
+    url: string;
+
+    @Column()
+    website: string;
 }
