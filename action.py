@@ -37,8 +37,7 @@ websites = Table("Website", metadata, autoload=True, auto_load_with=engine)
 
 # We can now run every drivers to parse the websites and store each results
 # into the database. (if different from last row)
-
-website_list = ["korben"]
+website_list = ["korben", "zero1net", "generation_nt", "lesnumeriques"]
 for website in website_list:
     driver = driver_factory(website)
     article = driver.fetch_last_article()
@@ -53,5 +52,7 @@ for website in website_list:
                 title=article.title,
                 author=article.author,
                 date=article.date,
+                url=article.url,
+                website=article.website.name,
             )
         )
