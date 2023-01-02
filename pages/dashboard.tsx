@@ -2,14 +2,8 @@ import * as React from 'react'
 import { IArticle } from './index'
 import Image from 'next/image'
 import {
-    Table,
-    Thead,
-    Tbody,
-    Tr,
-    Th,
-    Td,
-    TableContainer,
     Container,
+    Text,
     Box,
     Flex,
     Spacer,
@@ -30,52 +24,59 @@ const Dashboard: React.FC<DashboardProps> = (props) => {
   }
 
   return (
-    <div>
+    <Container maxW={["md", "xl", "2xl", "4xl"]} p={4}>
       <Flex>
-        <Image src="/logo.svg" alt="logo" width={128} height={128} />
+        <Spacer />
+        <Image src="/logo.png" alt="logo" width={128} height={128}/>
+        <Spacer />
         <Heading as="h1" m={"auto"}>Canopy Fragment</Heading>
         <Spacer />
       </Flex>
 
-      <Box mt={8}></Box>
+      <Box mt={8} maxW={["md", "xl", "2xl", "4xl"]}> 
         {
           props.articles.map((articles) => {
-            const websiteTitle = articles[0].website
+            const websiteTitle = articles[0].displayTitle
             return (
-              <Box key={websiteTitle} maxW={["md", "xl", "2xl", "4xl"]} m="auto">
-                <Heading as="h3" mt={16}>{websiteTitle}</Heading>
-                <Table variant='simple' size="sm">
-                  {/* <TableCaption>Imperial to metric conversion factors</TableCaption> */}
-                  <Tbody>
-                    {
-                      articles.map((article) => {
-                        console.log(article)
+              <Box key={websiteTitle} m="auto">
+                <Heading as="h3" my={8}>{websiteTitle}</Heading>
 
-                        // If the article.date is the same as today, the article is new and the text is bold
-                        const currentDate = new Date();
-                        const dateString = currentDate.getFullYear() + "-" + (currentDate.getMonth() + 1) + "-" + currentDate.getDate();
-                        const textWeight = article.date === dateString ? "bold" : "normal"
+                {
+                  articles.map((article) => {
+                    // If the article.date is the same as today, the article is new and the text is bold
+                    const currentDate = new Date();
+                    const dateString = currentDate.getFullYear() + "-" + (currentDate.getMonth() + 1) + "-" + currentDate.getDate();
+                    const textWeight = article.date === dateString ? "bold" : "normal"
 
-                        return (
-                          <Tr _hover={{bg: "gray.50"}} fontWeight={textWeight} key={article.title}>
-                            <Td>
-                              <a href={article.url} target="_blank" rel="noreferrer">
-                                {article.title}
-                              </a>
-                            </Td>
-                            <Td>{article.date}</Td>
-                            <Td>{article.author === "NaN" ? "" : article.author }</Td>
-                          </Tr>
-                        )
-                      })
-                    }
-                  </Tbody>
-                </Table>
+                    // Change the date from YY-MM-DDDD to DD/MM
+                    const dateDisplay = article.date.split("-").slice(1).join("/")
+
+                    return (
+                      <Flex key={article.title} _hover={{bg: "gray.50"}} fontWeight={textWeight} height="auto" borderColor={"gray.050"} borderBottomWidth={1}>
+                        <a href={article.url}>
+                          <Text noOfLines={3} whiteSpace={"normal"} minW={0}>
+                            {article.title}
+                          </Text>
+                        </a>
+
+                        <Spacer />
+
+                        <Text ml={8}>{dateDisplay}</Text>
+                        <Text ml={8}>{article.author === "NaN" ? "" : article.author }
+
+                        </Text>
+                      </Flex>
+                    )
+
+
+                  })
+                }
               </Box>
             )
           })
         }
-    </div>
+      </Box>
+    </Container>
   )
 }
 

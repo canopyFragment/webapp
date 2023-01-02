@@ -20,6 +20,7 @@ import { DashboardProps } from './dashboard'
 
 export interface IArticle {
   title: string,
+  displayTitle: string,
   date: string,
   author: string,
   url: string,
@@ -41,6 +42,13 @@ export default function Home(props: DashboardProps) {
 export async function getServerSideProps() {
 
   const websites = ["lesnumeriques", "generation-nt", "01net", "Korben", "developpez"]
+  const displayTitle: Map<string, string> = new Map([
+    ["lesnumeriques", "Les Numériques"],
+    ["generation-nt", "Génération NT"],
+    ["01net", "01net"],
+    ["Korben", "Korben"],
+    ["developpez", "Développez"],
+  ])
 
   // For every website, fetch the 10 last articles
   let allArticles: any = []
@@ -65,6 +73,7 @@ export async function getServerSideProps() {
     iarticles = allArticles.map((article: Article) => {
       return {
         title: article.title,
+        displayTitle: displayTitle.get(article.website) || article.website,
         date: article.date,
         author: article.author,
         url: article.url,
