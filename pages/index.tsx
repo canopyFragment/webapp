@@ -11,7 +11,7 @@ import {
   TableContainer,
 } from '@chakra-ui/react'
 
-import { getArticles } from '../lib/database/crud/article'
+import { getArticles, getArticlesByWebsite } from '../lib/database/crud/article'
 import { Article } from '../lib/database/entities/article'
 
 import Dashboard from './dashboard'
@@ -39,16 +39,30 @@ export default function Home(props: DashboardProps) {
 // It won't be called on client-side, so you can even do
 // direct database queries.
 export async function getServerSideProps() {
-  // Fetch the last article directly from the database
-  let articles = await getArticles()
 
-  // if articles is empty, create a empty array
+  const websites = ["lesnumeriques", "generation-nt", "01net", "Korben", "developpez"]
+
+  // For every website, fetch the 10 last articles
+  let allArticles: any = []
+  for (let i = 0; i < websites.length; i++) {
+    const website = websites[i]
+    let articles = await getArticlesByWebsite(website);
+
+    if (!articles) {
+      articles = []
+    }
+
+    allArticles = allArticles.concat(articles)
+  }
+  
   let iarticles: IArticle[] = []
-  if (!articles) {
+
+  if (!allArticles) {
     iarticles = []
+
   } else {
     // convert the articles to a simple array of IArticle
-    iarticles = articles.map((article: Article) => {
+    iarticles = allArticles.map((article: Article) => {
       return {
         title: article.title,
         date: article.date,

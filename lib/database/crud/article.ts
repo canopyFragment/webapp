@@ -55,6 +55,15 @@ export const updateArticle = async (article: IArticle) => {
 export const getArticles = async () => {
   const dataSource = await getAppDataSource()
 
-  return dataSource.manager.find(Article, {take: 10});
+  // Fetch the 50 most recent articles
+  return dataSource.manager.find(Article, { order: { id: "DESC" }, take: 50 });
+}
 
+
+// A function to fetch the last 10 article of a specific website
+export const getArticlesByWebsite = async (website: string) => {
+  const dataSource = await getAppDataSource()
+
+  // Fetch the 50 most recent articles
+  return dataSource.manager.find(Article, { where: { website: website }, order: { id: "DESC" }, take: 10 });
 }
