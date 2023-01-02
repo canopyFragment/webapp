@@ -50,8 +50,14 @@ const Dashboard: React.FC<DashboardProps> = (props) => {
                     {
                       articles.map((article) => {
                         console.log(article)
+
+                        // If the article.date is the same as today, the article is new and the text is bold
+                        const currentDate = new Date();
+                        const dateString = currentDate.getFullYear() + "-" + (currentDate.getMonth() + 1) + "-" + currentDate.getDate();
+                        const textWeight = article.date === dateString ? "bold" : "normal"
+
                         return (
-                          <Tr _hover={{bg: "gray.50"}} key={article.title}>
+                          <Tr _hover={{bg: "gray.50"}} fontWeight={textWeight} key={article.title}>
                             <Td>
                               <a href={article.url} target="_blank" rel="noreferrer">
                                 {article.title}
