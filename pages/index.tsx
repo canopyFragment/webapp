@@ -41,7 +41,14 @@ export default function Home(props: DashboardProps) {
 // direct database queries.
 export async function getServerSideProps() {
 
-  const websites = ["lesnumeriques", "generation-nt", "01net", "Korben", "developpez"]
+  const websites = [
+    "lesnumeriques",
+    "generation-nt",
+    "01net",
+    "Korben",
+    "developpez"
+  ]
+  
   const displayTitle: Map<string, string> = new Map([
     ["lesnumeriques", "Les Numériques"],
     ["generation-nt", "Génération NT"],
