@@ -31,14 +31,24 @@ print(url)
 engine = create_engine(url)
 metadata = MetaData(bind=engine)
 
-articles = Table("Article", metadata, autoload=True, auto_load_with=engine)
-websites = Table("Website", metadata, autoload=True, auto_load_with=engine)
+articles = Table("Article", metadata, autoload=True, autoload_with=engine)
+websites = Table("Website", metadata, autoload=True, autoload_with=engine)
 
 
 # We can now run every drivers to parse the websites and store each results
 # into the database. (if different from last row)
-website_list = ["korben", "zero1net", "generation_nt", "lesnumeriques", "developpez"]
+website_list = [
+    "korben",
+    "zero1net",
+    "generation_nt",
+    "lesnumeriques",
+    "developpez",
+    "clubic",
+    "numerama",
+    "nextimpact",
+]
 for website in website_list:
+    print('website: ', website)
     driver = driver_factory(website)
     article = driver.fetch_last_article()
 

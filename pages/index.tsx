@@ -1,17 +1,8 @@
-import { Inter } from '@next/font/google'
 import * as React from 'react'
+import Image from 'next/image'
+import { Box, Flex, Spacer, Heading } from '@chakra-ui/react'
 
-import {
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  TableContainer,
-} from '@chakra-ui/react'
-
-import { getArticles, getArticlesByWebsite } from '../lib/database/crud/article'
+import { getArticlesByWebsite } from '../lib/database/crud/article'
 import { Article } from '../lib/database/entities/article'
 
 import Dashboard from './dashboard'
@@ -29,10 +20,24 @@ export interface IArticle {
 
 
 export default function Home(props: DashboardProps) {
+  const leftColumn = props.articles.slice(0, props.articles.length / 2)
+  const rightColumn = props.articles.slice(props.articles.length / 2, props.articles.length)
+
   return (
-    <TableContainer>
-      <Dashboard articles={props.articles} />
-    </TableContainer>
+    <Flex py={8} direction={'column'} bg={'gray.100'}>
+      <Flex>
+        <Spacer />
+        <Image src="/logo.png" alt="logo" width={128} height={128} />
+        <Heading as="h1" m={"auto"}>  Canopy Fragment</Heading>
+        <Spacer />
+      </Flex>
+
+      <Flex px={8} mt={16}>
+        <Box w="49%"><Dashboard articles={leftColumn} /></Box>
+        <Spacer />
+        <Box w="49%"><Dashboard articles={rightColumn} /></Box>
+      </Flex>
+    </Flex>
   )
 }
 
@@ -46,15 +51,21 @@ export async function getServerSideProps() {
     "generation-nt",
     "01net",
     "Korben",
-    "developpez"
+    "developpez",
+    "Clublic",
+    "Numerama",
+    "NextImpact",
   ]
-  
+
   const displayTitle: Map<string, string> = new Map([
     ["lesnumeriques", "Les Numériques"],
     ["generation-nt", "Génération NT"],
     ["01net", "01net"],
     ["Korben", "Korben"],
     ["developpez", "Développez"],
+    ["Clublic", "Clublic"],
+    ["Numerama", "Numerama"],
+    ["NextImpact", "Next Impact"],
   ])
 
   // For every website, fetch the 10 last articles
@@ -69,7 +80,7 @@ export async function getServerSideProps() {
 
     allArticles = allArticles.concat(articles)
   }
-  
+
   let iarticles: IArticle[] = []
 
   if (!allArticles) {

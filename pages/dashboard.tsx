@@ -1,82 +1,78 @@
 import * as React from 'react'
 import { IArticle } from './index'
-import Image from 'next/image'
 import {
-    Container,
-    Text,
-    Box,
-    Flex,
-    Spacer,
-    Heading
-  } from '@chakra-ui/react'
+  Text,
+  Box,
+  Flex,
+  Spacer,
+  Heading,
+  Grid,
+  GridItem
+} from '@chakra-ui/react'
+import { formatDate, currentDateToString, alternateColor } from '../lib/utils'
+
+
+const ArticleRow: React.FC<IArticle> = (props) => {
+  const { title, displayTitle, date, author, url, website } = props
+  console.log(`article date: ${formatDate(date)} - current: ${formatDate(currentDateToString())}`)
+  const textWeight = formatDate(date) === formatDate(currentDateToString()) ? "bold" : "normal"
+
+  return (
+    <Flex
+      key={title}
+      _hover={{ bg: "gray.100" }}
+      fontWeight={textWeight}
+      height="auto"
+      borderColor={"gray.050"}
+      borderBottomWidth={1}
+    >
+      <a href={url}>
+        <Text fontSize={'smaller'} noOfLines={3} whiteSpace={"normal"} minW={0}>
+          {title}
+        </Text>
+      </a>
+
+      <Spacer />
+
+      <Text ml={8}>{formatDate(date)}</Text>
+      <Text ml={8}>{author === "NaN" ? "" : author}
+
+      </Text>
+    </Flex>
+  )
+}
 
 export interface DashboardProps {
-    articles: IArticle[][]
+  articles: IArticle[][]
 }
 
 const Dashboard: React.FC<DashboardProps> = (props) => {
-  const tableStyle = {
-    row: {
-      hover: {
-        bg: "gray.100",
-      }  
-    }
-  }
-
   return (
-    <Container maxW={["md", "xl", "2xl", "4xl"]} p={4}>
-      <Flex>
-        <Spacer />
-        <Image src="/logo.png" alt="logo" width={128} height={128}/>
-        <Spacer />
-        <Heading as="h1" m={"auto"}>Canopy Fragment</Heading>
-        <Spacer />
-      </Flex>
+    <Grid templateColumns='repeat(1, 1fr)' gap={2}>
+      {props.articles.map((articles, index) => {
+        const websiteTitle = articles[0].displayTitle
+        const bg = alternateColor(index) ? "gray.50" : "gray.200"
 
-      <Box mt={8} maxW={["md", "xl", "2xl", "4xl"]}> 
-        {
-          props.articles.map((articles) => {
-            const websiteTitle = articles[0].displayTitle
-            return (
-              <Box key={websiteTitle} m="auto">
-                <Heading as="h3" my={8}>{websiteTitle}</Heading>
+        return (
+          <GridItem key={websiteTitle} m="auto" w='100%' bg={bg} borderRadius={4}>
+            <Flex direction='column' p={4} boxShadow={"3px 3px 1px 0px #00000035;"}>
+              <Flex borderBottomWidth={2} mb={8}>
+                <Spacer />
+                <Heading size={'lg'} my={8}>
+                  {websiteTitle}
+                </Heading>
+                <Spacer />
+              </Flex>
+              {
+                articles.map((article) => <ArticleRow key={article.title} {...article} />)
+              }
+            </Flex>
+          </GridItem>
+        )
 
-                {
-                  articles.map((article) => {
-                    // If the article.date is the same as today, the article is new and the text is bold
-                    const currentDate = new Date();
-                    const dateString = currentDate.getFullYear() + "-" + (currentDate.getMonth() + 1) + "-" + currentDate.getDate();
-                    const textWeight = article.date === dateString ? "bold" : "normal"
-
-                    // Change the date from YY-MM-DDDD to DD/MM
-                    const dateDisplay = article.date.split("-").slice(1).join("/")
-
-                    return (
-                      <Flex key={article.title} _hover={{bg: "gray.50"}} fontWeight={textWeight} height="auto" borderColor={"gray.050"} borderBottomWidth={1}>
-                        <a href={article.url}>
-                          <Text noOfLines={3} whiteSpace={"normal"} minW={0}>
-                            {article.title}
-                          </Text>
-                        </a>
-
-                        <Spacer />
-
-                        <Text ml={8}>{dateDisplay}</Text>
-                        <Text ml={8}>{article.author === "NaN" ? "" : article.author }
-
-                        </Text>
-                      </Flex>
-                    )
-
-
-                  })
-                }
-              </Box>
-            )
-          })
-        }
-      </Box>
-    </Container>
+      })
+      }
+    </Grid>
   )
 }
 

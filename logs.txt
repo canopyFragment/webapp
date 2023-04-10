@@ -1,0 +1,10 @@
+url
+mysql+pymysql://ovyt3455_canopy:markII_0802.@109.234.164.231:3306/ovyt3455_canopy
+website:  korben
+website:  zero1net
+website:  generation_nt
+website:  lesnumeriques
+website:  developpez
+website:  clubic
+website:  numerama
+website:  nextimpact
